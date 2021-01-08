@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html class="x-admin-sm">
+
+<head>
+    <meta charset="UTF-8">
+    <title>欢迎页面-X-admin2.2</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
+    <link rel="stylesheet" href="/css/font.css">
+    <link rel="stylesheet" href="/css/xadmin.css">
+    <script src="/lib/layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="/js/xadmin.js"></script>
+</head>
+
+<body>
+<div class="x-nav">
+            <span class="layui-breadcrumb">
+                <a href="">首页</a>
+                <a href="">演示</a>
+                <a>
+                    <cite>导航元素</cite></a>
+            </span>
+    <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" onclick="location.reload()" title="刷新">
+        <i class="layui-icon layui-icon-refresh" style="line-height:30px"></i>
+    </a>
+</div>
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-body ">
+                    <table class="layui-table layui-form" id="goodList" lay-filter="goodfilt">
+
+                    </table>
+                    <script type="text/html" id="toolbarUser">
+                        <div class="layui-btn-container">
+<!--                            <button class="layui-btn layui-btn-sm" lay-event="queryUser">查询用户</button>-->
+<!--                            <button class="layui-btn layui-btn-sm" lay-event="addData">添加用户</button>-->
+
+                        </div>
+                    </script>
+                    <script type="text/html" id="barUser">
+                        <a class="layui-btn layui-btn-xs" lay-event="tobuy">加购</a>
+                        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="buy">购买</a>
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+
+
+
+<script>
+    layui.use('table', function(){
+        var table = layui.table;
+
+        table.render({
+            elem: '#goodList'
+            ,url:'/getPageGoodList'
+            ,toolbar: '#toolbarUser' //开启头部工具栏，并为其绑定左侧模板
+            ,defaultToolbar: ['filter', 'exports', 'print']
+            ,cols: [ [
+                {type:'checkbox'}
+                ,{field:'id', width:80, title: 'ID', sort: true}
+                ,{field:'name', width:80, title: '商品名'}
+                ,{field:'price', width:80, title: '价格', sort: true}
+                ,{field:'quantity', width:200, title: '余货'}
+                ,{fixed: 'right', title:'操作', toolbar: '#barUser', width:150}
+
+            ] ]
+            ,page: true
+        });
+        //头工具栏事件
+        // table.on('toolbar(goodfilt)', function(obj){
+        //     var checkStatus = table.checkStatus(obj.config.id);
+        //     switch(obj.event){
+        //         // 查询
+        //         case 'queryUser':
+        //             // var data = checkStatus.data;
+        //             // layer.alert(JSON.stringify(data));
+        //             layer.open({
+        //                 type : 2,
+        //                 area: ['1200px', '500px'],
+        //                 content: '/userQuery'
+        //             });
+        //             break;
+        //         //添加
+        //         case 'addData':
+        //             layer.open({
+        //                 type: 2,
+        //                 area: ['550px', '350px'],
+        //                 content: '/userAdd' //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
+        //             });
+        //             break;
+        //
+        //     };
+        // });
+
+
+        //监听行工具事件
+        table.on('tool(goodfilt)', function(obj){
+            var data = obj.data;
+
+            // 购买
+            if(obj.event === 'buy'){
+                layer.confirm('真的购买一件么', function(index){
+
+                    $.ajax({
+                        type:'post',
+                        url:'/buyGood',
+                        async:false,
+                        data:{id:data.id},
+                        success:function (code) {
+                            if(code==="0"){
+                                layer.msg("购买一件成功",{icon:6});
+                            }
+                            else{
+                                layer.msg("购买一件出错",{icon:2});
+                            }
+                        }
+                    });
+
+                });
+            }
+            //TODO: 加入购物车
+            else if(obj.event === 'tobuy'){
+                layer.open({
+                    type: 2,
+                    area: ['550px', '350px'],
+                    content: '/usertobuy?id='+data.id //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
+                });
+            }
+        });
+
+    });
+</script>
+
+
+</html>
