@@ -65,7 +65,7 @@
             ,cols: [ [
                 {type:'checkbox'}
                 ,{field:'id', width:80, title: 'ID', sort: true}
-                ,{field:'name', width:80, title: '商品名'}
+                ,{field:'name', width:200, title: '商品名'}
                 ,{field:'price', width:80, title: '价格', sort: true}
                 ,{field:'quantity', width:200, title: '余货'}
                 ,{fixed: 'right', title:'操作', toolbar: '#barUser', width:150}
@@ -112,13 +112,18 @@
                         type:'post',
                         url:'/buyGood',
                         async:false,
-                        data:{id:data.id},
+                        data:{
+                            id:data.id,
+                            name:data.name,
+                            price:data.price,
+                            quantity:data.quantity
+                        },
                         success:function (code) {
                             if(code==="0"){
                                 layer.msg("购买一件成功",{icon:6});
                             }
                             else{
-                                layer.msg("购买一件出错",{icon:2});
+                                layer.msg("购买一件出错，余货不足",{icon:2});
                             }
                         }
                     });

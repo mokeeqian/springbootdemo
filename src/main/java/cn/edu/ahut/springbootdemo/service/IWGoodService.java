@@ -12,4 +12,7 @@ public interface IWGoodService {
     WGood getWGoodByGoodName(String goodName);
     Page<WGood> getAllPageGoodList(Pageable pageable);
 
+    void delGoodQuantity(Integer goodId);
+    void IncreGoodQuantity(Integer goodId);
+
 }

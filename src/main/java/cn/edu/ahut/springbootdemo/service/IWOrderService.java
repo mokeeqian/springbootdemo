@@ -12,7 +12,7 @@ public interface IWOrderService {
     void addOrder(WOrder order);
     Page<WOrder> getAllPageOrderList(Pageable pageable);
 
-    @Query(value = "select od from WOrder where od.userid = :userid", nativeQuery = true)
-    public Page<WOrder> getCertainUserPageOrderList(@Param("userid") Integer userid);
+    @Query(value = "select od from w_order where od.userid = :userid", nativeQuery = true)
+    Page<WOrder> getCertainUserPageOrderList(@Param("userid") Integer userid);
 
 }

@@ -9,7 +9,9 @@ public class WOrder {
     private int userid;
     private int goodid;
     private int size;
-    private int status;
+    // 写死，规定只能是 “已下单”、“已发货”、“已收货”、“已取消”
+    private String status;
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -50,11 +52,11 @@ public class WOrder {
     }
 
     @Column(name = "status")
-    public int getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 }

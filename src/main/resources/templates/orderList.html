@@ -108,7 +108,7 @@
 
             // 商家取消订单
             if(obj.event === 'reject'){
-                layer.confirm('真的要取消吗', function(index){
+                layer.confirm('真的要拒绝吗', function(index){
 
                     $.ajax({
                         type:'post',
@@ -117,10 +117,10 @@
                         data:{id:data.id},
                         success:function (code) {
                             if(code==="0"){
-                                layer.msg("取消成功",{icon:6});
+                                layer.msg("拒绝成功",{icon:6});
                             }
                             else{
-                                layer.msg("取消出错",{icon:2});
+                                layer.msg("拒绝出错",{icon:2});
                             }
                         }
                     });

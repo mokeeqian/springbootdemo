@@ -43,19 +43,29 @@ public class GoodController {
     public String buyGood(WGood wGood, HttpServletRequest request){
         String code;
         WUser user = (WUser) request.getSession().getAttribute("user");
-        WOrder order = new WOrder();
-        order.setUserid(user.getId());
-        order.setGoodid(wGood.getId());
-        // 默认买一件
-        order.setSize(1);
 
-        // 状态： 下单
-        order.setStatus(0);
+        System.out.println(wGood.toString());
 
-        // 生成订单
-        iwOrderService.addOrder(order);
+        if ( wGood.getQuantity() >= 1 ) {
+            WOrder order = new WOrder();
+            order.setUserid(user.getId());
+            order.setGoodid(wGood.getId());
+            // 默认买一件
+            order.setSize(1);
 
-        code="0";
+            // 状态： 下单
+            order.setStatus("已下单");
+
+            // 生成订单
+            iwOrderService.addOrder(order);
+
+            // 商品数目减一
+            wGoodService.delGoodQuantity(wGood.getId());
+
+            code = "0";
+        } else {
+            code = "1";
+        }
         return code;
     }
 

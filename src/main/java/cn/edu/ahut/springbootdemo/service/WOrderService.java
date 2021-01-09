@@ -33,19 +33,15 @@ public class WOrderService implements IWOrderService{
     }
 
     @Override
-    @Query(value = "select od from WOrder where od.userid = :userid", nativeQuery = true)
+    @Query(value = "select od from w_order where od.userid = :userid", nativeQuery = true)
     public Page<WOrder> getCertainUserPageOrderList(@Param("userid") Integer userid) {
+
+        //TODO：
         return null;
     }
 
 
-    // 自定义查询条件
-//    private class MySpec implements Specification<WOrder> {
-//        @Override
-//        public Predicate toPredicate(Root<WOrder> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
-//            return null;
-//        }
-//    }
+
 }
 
 

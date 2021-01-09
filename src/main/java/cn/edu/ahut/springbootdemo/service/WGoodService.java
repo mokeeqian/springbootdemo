@@ -30,4 +30,23 @@ public class WGoodService implements IWGoodService{
         return iwGoodDao.findAll(pageable);
     }
 
+    /*
+        购买一件，数量减一
+     */
+    @Override
+    public void delGoodQuantity(Integer goodId) {
+//        iwGoodDao.findDistinctTopById(goodId).setQuantity( iwGoodDao.findDistinctTopById(goodId).getQuantity()-1 );
+        WGood good = iwGoodDao.findDistinctTopById(goodId);
+        good.setQuantity(good.getQuantity()-1);
+        iwGoodDao.save(good);
+    }
+
+    @Override
+    public void IncreGoodQuantity(Integer goodId) {
+//        iwGoodDao.findDistinctTopById(goodId).setQuantity( iwGoodDao.findDistinctTopById(goodId).getQuantity()+1 );
+        WGood good = iwGoodDao.findDistinctTopById(goodId);
+        good.setQuantity(good.getQuantity()+1);
+        iwGoodDao.save(good);
+    }
+
 }

@@ -2,6 +2,7 @@ package cn.edu.ahut.springbootdemo.controller;
 
 import cn.edu.ahut.springbootdemo.common.TableResult;
 import cn.edu.ahut.springbootdemo.entity.WOrder;
+import cn.edu.ahut.springbootdemo.service.IWGoodService;
 import cn.edu.ahut.springbootdemo.service.IWOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -9,7 +10,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
@@ -17,6 +20,9 @@ public class OrderController {
 
     @Autowired
     IWOrderService iwOrderService;
+
+    @Autowired
+    IWGoodService iwGoodService;
 
     @RequestMapping(value = "/getPageOrderList")
     @ResponseBody
@@ -47,6 +53,29 @@ public class OrderController {
         return tableResult;
     }
 
+
+//    //TODO:
+//    @RequestMapping(value = "/orderSearch")
+//    public String orderSearch(Model model) {
+//        String code;
+//        if ( true ) {
+//
+//
+//            code = "0";
+//        } else {
+//            code = "1";
+//        }
+//
+//        return code;
+//    }
+
+//    // 取结果
+//    @RequestMapping(value = "/orderSearch/{id}", method = RequestMethod.POST)
+//    @ResponseBody
+//    public TableResult<WOrder> orderSearch(@PathVariable Integer id) {
+//
+//    }
+
     // 订单发货
     @RequestMapping(value = "/orderSend")
     @ResponseBody
@@ -54,12 +83,16 @@ public class OrderController {
         String code;
         WOrder order = this.iwOrderService.getOrderByOrderId(id);
 
-        // 设置订单状态
-        order.setStatus(1);
-        model.addAttribute("order", order);
-        // 存回数据库
-        iwOrderService.addOrder(order);
-        code = "0";
+        if ( order.getStatus().equals("已下单") ) {
+            // 设置订单状态
+            order.setStatus("已发货");
+            model.addAttribute("order", order);
+            // 存回数据库
+            iwOrderService.addOrder(order);
+            code = "0";
+        } else {
+            code = "1";
+        }
         return code;
     }
 
@@ -70,12 +103,16 @@ public class OrderController {
         String code;
         WOrder order = this.iwOrderService.getOrderByOrderId(id);
 
-        // 设置订单状态
-        order.setStatus(2);
-        model.addAttribute("order", order);
-        // 存回数据库
-        iwOrderService.addOrder(order);
-        code = "0";
+        if ( order.getStatus().equals("已发货") ) {
+            // 设置订单状态
+            order.setStatus("已收货");
+            model.addAttribute("order", order);
+            // 存回数据库
+            iwOrderService.addOrder(order);
+            code = "0";
+        } else {
+            code = "1";
+        }
         return code;
     }
 
@@ -87,12 +124,18 @@ public class OrderController {
         String code;
         WOrder order = this.iwOrderService.getOrderByOrderId(id);
 
-        // 设置订单状态
-        order.setStatus(3);
-        model.addAttribute("order", order);
-        // 存回数据库
-        iwOrderService.addOrder(order);
-        code = "0";
+        if ( order.getStatus().equals("已下单") ) {
+
+            // 设置订单状态
+            order.setStatus("已取消");
+            model.addAttribute("order", order);
+            // 存回数据库
+            iwOrderService.addOrder(order);
+            iwGoodService.IncreGoodQuantity(order.getGoodid());
+            code = "0";
+        } else {
+            code = "1";
+        }
         return code;
     }
 
