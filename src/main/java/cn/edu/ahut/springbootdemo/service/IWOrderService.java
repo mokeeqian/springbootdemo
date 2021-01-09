@@ -3,8 +3,8 @@ package cn.edu.ahut.springbootdemo.service;
 import cn.edu.ahut.springbootdemo.entity.WOrder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
+
+import java.util.List;
 
 public interface IWOrderService {
     WOrder getOrderByOrderId(Integer id);
@@ -12,7 +12,7 @@ public interface IWOrderService {
     void addOrder(WOrder order);
     Page<WOrder> getAllPageOrderList(Pageable pageable);
 
-    @Query(value = "select od from w_order where od.userid = :userid", nativeQuery = true)
-    Page<WOrder> getCertainUserPageOrderList(@Param("userid") Integer userid);
+    List<WOrder> getAllOrdersByUserid(Integer id);
+    List<WOrder> getAllOrdersByOrderid(Integer id);
 
 }

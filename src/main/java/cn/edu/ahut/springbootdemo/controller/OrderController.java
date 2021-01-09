@@ -2,10 +2,12 @@ package cn.edu.ahut.springbootdemo.controller;
 
 import cn.edu.ahut.springbootdemo.common.TableResult;
 import cn.edu.ahut.springbootdemo.entity.WOrder;
+import cn.edu.ahut.springbootdemo.entity.WUser;
 import cn.edu.ahut.springbootdemo.service.IWGoodService;
 import cn.edu.ahut.springbootdemo.service.IWOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
@@ -14,6 +16,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.servlet.http.HttpSession;
+import java.util.List;
 
 @Controller
 public class OrderController {
@@ -38,43 +43,51 @@ public class OrderController {
         return tableResult;
     }
 
-    //TODO: 多表条件查询
+    // 用户自己的订单
     @RequestMapping(value = "/getPageOrderListBuyer")
     @ResponseBody
-    public TableResult<WOrder> getPageOrderListBuyer(int page, int limit) {
+    public TableResult<WOrder> getPageOrderListBuyer(HttpSession session) {
         TableResult<WOrder> tableResult = new TableResult<>();
-        Pageable pageable = PageRequest.of(page-1, limit);
-        Page<WOrder> userPage = iwOrderService.getAllPageOrderList(pageable);
+        WUser user = (WUser) session.getAttribute("user");
+        Integer userid = user.getId();
+        List<WOrder> res = iwOrderService.getAllOrdersByUserid(userid);
+
+        Page<WOrder> orderPage = new PageImpl<>(res);
         tableResult.setCode(0);
         tableResult.setMsg("");
-        tableResult.setCount(userPage.getTotalElements());
-        tableResult.setData(userPage.getContent());
-
+        tableResult.setCount(orderPage.getTotalElements());
+        tableResult.setData(orderPage.getContent());
         return tableResult;
     }
 
 
-//    //TODO:
-//    @RequestMapping(value = "/orderSearch")
-//    public String orderSearch(Model model) {
-//        String code;
-//        if ( true ) {
-//
-//
-//            code = "0";
-//        } else {
-//            code = "1";
-//        }
-//
-//        return code;
-//    }
 
-//    // 取结果
-//    @RequestMapping(value = "/orderSearch/{id}", method = RequestMethod.POST)
-//    @ResponseBody
-//    public TableResult<WOrder> orderSearch(@PathVariable Integer id) {
-//
-//    }
+
+    @RequestMapping(value = "/orderSearch/{id}", method = RequestMethod.POST)
+    @ResponseBody
+    public TableResult<WOrder> orderSearch(@PathVariable Integer id) {
+        TableResult<WOrder> tableResult = new TableResult<>();
+        List<WOrder> orderList = iwOrderService.getAllOrdersByOrderid(id);
+        Page<WOrder> orderPage = new PageImpl<>(orderList);
+        tableResult.setCode(0);
+        tableResult.setMsg("");
+        tableResult.setCount(orderPage.getTotalElements());
+        tableResult.setData(orderPage.getContent());
+        return tableResult;
+    }
+
+    @RequestMapping(value = "/orderSearchByUserid/{id}", method = RequestMethod.POST)
+    @ResponseBody
+    public TableResult<WOrder> orderSearchByUserid(@PathVariable Integer id) {
+        TableResult<WOrder> tableResult = new TableResult<>();
+        List<WOrder> orderList = iwOrderService.getAllOrdersByUserid(id);
+        Page<WOrder> orderPage = new PageImpl<>(orderList);
+        tableResult.setCode(0);
+        tableResult.setMsg("");
+        tableResult.setCount(orderPage.getTotalElements());
+        tableResult.setData(orderPage.getContent());
+        return tableResult;
+    }
 
     // 订单发货
     @RequestMapping(value = "/orderSend")

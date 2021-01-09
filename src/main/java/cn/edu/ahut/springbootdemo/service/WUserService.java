@@ -7,6 +7,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 
 @Service
 public class WUserService implements IWUserService{
@@ -37,5 +39,10 @@ public class WUserService implements IWUserService{
     @Override
     public WUser getUserById(Integer id) {
         return this.wuserDao.getOne(id);
+    }
+
+    @Override
+    public List<WUser> getAllUsersByUsernameContains(String pattern) {
+        return wuserDao.findWUsersByUsernameContains(pattern);
     }
 }

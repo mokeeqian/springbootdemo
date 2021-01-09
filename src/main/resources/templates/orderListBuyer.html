@@ -18,7 +18,7 @@
 <div class="demoTable">
     搜索订单ID：
     <div class="layui-inline">
-        <input class="layui-input" name="id" id="demoReload" autocomplete="off">
+        <input class="layui-input" name="id" id="byOrderId" autocomplete="off">
     </div>
     <button class="layui-btn" data-type="reload">搜索</button>
 <!--    <a class="layui-btn" data-type="reload">搜索</a>-->
@@ -68,30 +68,15 @@
             ,page: true
         });
 
-
-        // var $ = layui.$;
+        // 通过reload实现查询
         var active = {
             reload: function(){
-                var demoReload = $('#demoReload');
+                var byOrderId = $('#byOrderId');
 
-                //执行重载
                 table.reload('testReload', {
-                    // url: '/orderSearch'
-                    // ,method: 'post'
-                    page: {
-                        curr: 1 //重新从第 1 页开始
-                    }
-                    ,where: {
-                        key: {
-                            id: demoReload.val()
-                        }
-                    }
-                },
-                    'data');
-                // table.reload('testReload',{
-                //     url: '/orderSearch/' + demoReload.val(),
-                //     method: 'post'
-                // })
+                    url: 'orderSearch/'+byOrderId.val().toString(),
+                    method: 'post'
+                })
             }
         };
 
@@ -119,6 +104,7 @@
                         success:function (code) {
                             if(code==="0"){
                                 layer.msg("取消成功",{icon:6});
+                                layui.father_reload();
                             }
                             else{
                                 layer.msg("取消出错",{icon:2});
@@ -139,6 +125,7 @@
                         success:function (code) {
                             if(code==="0"){
                                 layer.msg("收货成功",{icon:6});
+                                layui.father_reload();
                             }
                             else{
                                 layer.msg("收货出错",{icon:2});
