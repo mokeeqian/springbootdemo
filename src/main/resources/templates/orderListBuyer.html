@@ -30,7 +30,7 @@
         <div class="layui-col-md12">
             <div class="layui-card">
                 <div class="layui-card-body ">
-                    <table class="layui-table layui-form" id="orderList" lay-filter="orderfilt">
+                    <table class="layui-table layui-form" id="orderListBuyer" lay-filter="orderfilt">
 
                     </table>
                     <script type="text/html" id="toolbarUser">
@@ -41,8 +41,8 @@
                         </div>
                     </script>
                     <script type="text/html" id="barUser">
-                        <a class="layui-btn layui-btn-xs" lay-event="send">发货</a>
-                        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="reject">拒绝</a>
+                        <a class="layui-btn layui-btn-xs" lay-event="cancel">取消</a>
+                        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="receive">收货</a>
                     </script>
                 </div>
             </div>
@@ -58,8 +58,8 @@
         var table = layui.table;
 
         table.render({
-            elem: '#orderList'
-            ,url:'/getPageOrderList'
+            elem: '#orderListBuyer'
+            ,url:'/getPageOrderListBuyer'
             ,toolbar: '#toolbarUser' //开启头部工具栏，并为其绑定左侧模板
             ,defaultToolbar: ['filter', 'exports', 'print']
             ,cols: [ [
@@ -106,8 +106,8 @@
         table.on('tool(orderfilt)', function(obj){
             var data = obj.data;
 
-            // 商家取消订单
-            if(obj.event === 'reject'){
+            // 买家取消订单
+            if(obj.event === 'cancel'){
                 layer.confirm('真的要取消吗', function(index){
 
                     $.ajax({
@@ -128,19 +128,19 @@
                 });
             }
 
-            else if ( obj.event === 'send' ){
-                layer.confirm( '真的要发货吗', function (index) {
+            else if ( obj.event === 'receive' ){
+                layer.confirm( '真的要收货吗', function (index) {
                     $.ajax({
                         type:'post',
-                        url:'/orderSend',
+                        url:'/orderReceive',
                         async:false,
                         data:{id:data.id},
                         success:function (code) {
                             if(code==="0"){
-                                layer.msg("发货成功",{icon:6});
+                                layer.msg("收货成功",{icon:6});
                             }
                             else{
-                                layer.msg("发货出错",{icon:2});
+                                layer.msg("收货出错",{icon:2});
                             }
                         }
                     })

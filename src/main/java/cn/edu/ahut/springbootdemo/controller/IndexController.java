@@ -77,6 +77,16 @@ public class IndexController {
         return "goodList";
     }
 
+    @RequestMapping(value = "/orderList")
+    public String orderList() {
+        return "orderList";
+    }
+
+    //  买家
+    @RequestMapping(value = "/orderListBuyer")
+    public String orderListBuyer() {
+        return "orderListBuyer";
+    }
 
     @RequestMapping(value = "/userAdd")
     public String userAdd(){
